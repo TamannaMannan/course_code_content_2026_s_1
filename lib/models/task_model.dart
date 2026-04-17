@@ -2,24 +2,16 @@
 //
 //     final taskModel = taskModelFromJson(jsonString);
 
-import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
-
-part 'task_model.g.dart';
 
 TaskModel taskModelFromJson(String str) => TaskModel.fromJson(json.decode(str));
 
 String taskModelToJson(TaskModel data) => json.encode(data.toJson());
 
-@JsonSerializable()
 class TaskModel {
-    @JsonKey(name: "id")
     String id;
-    @JsonKey(name: "title")
     String title;
-    @JsonKey(name: "description")
     String description;
-    @JsonKey(name: "createdAt")
     DateTime createdAt;
 
     TaskModel({
@@ -29,7 +21,17 @@ class TaskModel {
         required this.createdAt,
     });
 
-    factory TaskModel.fromJson(Map<String, dynamic> json) => _$TaskModelFromJson(json);
+    factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
+        id: json["id"],
+        title: json["title"],
+        description: json["description"],
+        createdAt: DateTime.parse(json["createdAt"]),
+    );
 
-    Map<String, dynamic> toJson() => _$TaskModelToJson(this);
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "title": title,
+        "description": description,
+        "createdAt": "${createdAt.year.toString().padLeft(4, '0')}-${createdAt.month.toString().padLeft(2, '0')}-${createdAt.day.toString().padLeft(2, '0')}",
+    };
 }
